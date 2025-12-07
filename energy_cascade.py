@@ -32,7 +32,7 @@ if __name__ == "__main__":
     Nt = X.shape[1]
     nbins = 10
     nlags = np.array([1, 19, 11, 6])
-    target_var = 1
+    target_var = 4
     input_vars = [1, 2, 3, 4] 
 
 
@@ -50,8 +50,8 @@ if __name__ == "__main__":
 
     # hyperparameter
     batch_size = 65536
-    epochs = 800
-    lr = 1e-4
+    epochs = 1000
+    lr = 2e-4
     ema_rate=0.01
     lambda_reg=0.1
     C_reg=0.0

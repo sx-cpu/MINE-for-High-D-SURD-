@@ -11,9 +11,10 @@ plt.rcParams.update({'font.size': 22})
 if __name__ == '__main__':
 
     # information
+    block = 'mediator'
     lag = 1
     Nt = 2 * 10**6
-    bins = 50
+    bins = 100
     nvars = 3
 
     information_flux = {}
@@ -24,7 +25,7 @@ if __name__ == '__main__':
 
     # file path
     formatted_Nt = "{:.0e}".format(Nt).replace("+0","").replace("+","")
-    filepath = os.path.join('./data', f"mediator_Nt_{formatted_Nt}.npy")
+    filepath = os.path.join('./data', f"{block}_Nt_{formatted_Nt}.npy")
 
     for target_var in range(1, nvars+1):
 
@@ -36,7 +37,7 @@ if __name__ == '__main__':
 
         # get the latest file
         folder = "results/MI_results"
-        pattern = os.path.join(folder, f'mediator_MI_results_target_{target_var}_*.npy')
+        pattern = os.path.join(folder, f'{block}_MI_results_target_{target_var}_*.npy')
         files = glob.glob(pattern)
         if len(files) == 0:
             raise FileNotFoundError(f"No files found matching: {pattern}")
@@ -71,6 +72,6 @@ if __name__ == '__main__':
         axs[i,0].set_xticklabels('')
 
     plt.tight_layout(w_pad=-8, h_pad=0)
-    plot_save_path = './results/surd_results/mediator.png'
+    plot_save_path = f'./results/surd_results/{block}.png'
     plt.savefig(plot_save_path)
     plt.show()

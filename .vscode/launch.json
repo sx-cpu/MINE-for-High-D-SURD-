@@ -5,6 +5,13 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "name": "energy cascade surd",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "./surd_energy_cascade.py",
+            "console": "integratedTerminal"
+        },
+        {
             "name": "mediator surd ",
             "type": "debugpy",
             "request": "launch",

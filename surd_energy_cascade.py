@@ -16,7 +16,7 @@ if __name__ == "__main__":
     X = data['X']
     nvars = X.shape[0]
     Nt = X.shape[1]
-    nbins = 10
+    nbins = 70
     nlags = np.array([1, 19, 11, 6])
     input_vars = [1, 2, 3, 4] 
 
@@ -59,7 +59,7 @@ if __name__ == "__main__":
     fig, axs = plt.subplots(nvars, 2, figsize=(10, 2.3*nvars), gridspec_kw={'width_ratios': [nvars*14, 1]})
     plt.rcParams.update({'font.size': 18})
     for i in range(nvars):
-        information_flux[i+1] = surd.plot(Rd_results[i+1], Sy_results[i+1], info_leak_results[i+1], axs[i,:], nvars, nlabels=12)
+        information_flux[i+1] = surd.plot(Rd_results[i+1], Sy_results[i+1], info_leak_results[i+1], axs[i,:], nvars, threshold=-0.01)
 
         # Plot formatting
         axs[i,0].set_title(f'${{\\Delta I}}_{{(\\cdot) \\rightarrow {i+1}}} / I \\left(\\Sigma_{i+1}^+ ; \\mathrm{{\\mathbf{{\\Sigma}}}} \\right)$',pad=10)

@@ -26,8 +26,8 @@ if __name__ == "__main__":
     transient = 10000
     samples = Nt - transient
 
-    block = cases.confounder
-    target_var = 1                 
+    block = cases.synergistic_collider
+    target_var = 3                 
     input_vars = [1, 2, 3]            
 
     block_name = block.__name__
@@ -66,14 +66,13 @@ if __name__ == "__main__":
     # hyperparameter
     # -----------------------------
     batch_size = 65536
-    epochs = 40
-    lr = 1e-4
+    epochs = 35
     ema_rate=0.01
     lambda_reg=0.1
     C_reg=0.0
     window_size=500
     batch_size = 65536
-    lr = 1e-4
+    lr = 3e-4
 
     for subset in subsets:
         print(f"\n=== Training MINE for inputs {subset} → target {target_var}[+{nlag}] ===")
@@ -114,7 +113,7 @@ if __name__ == "__main__":
     # -----------------------------
     
     ts = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-    savepath = f"./MI_results/{block_name}_MI_results_target_{target_var}_{ts}.npy"
+    savepath = f"./results/MI_results/{block_name}_MI_results_target_{target_var}_{ts}.npy"
     np.save(savepath, MI_results)
     print(f"\nSaved MI results to {savepath}")
 
