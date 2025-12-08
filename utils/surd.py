@@ -262,3 +262,89 @@ def plot(I_R, I_S, info_leak, axs, nvars, threshold=0):
     axs[1].tick_params(width=3)
 
     return dict(zip(label_keys, values))
+
+def plot_nlabels(I_R, I_S, info_leak, axs, nvars, nlabels=-1):
+    """
+    This function computes and plots information flux for given data.
+    :param I_R: Data for redundant contribution
+    :param I_S: Data for synergistic contribution
+    :param axs: Axes for plotting
+    :param colors: Colors for redundant, unique and synergistic contributions
+    :param nvars: Number of variables
+    :param threshold: Threshold as a percentage of the maximum value to select contributions to plot
+    """
+    colors = {}
+    colors['redundant'] = mcolors.to_rgb('#003049')
+    colors['unique'] = mcolors.to_rgb('#d62828')
+    colors['synergistic'] = mcolors.to_rgb('#f77f00')
+
+    for key, value in colors.items():
+        rgb = mcolors.to_rgb(value)
+        colors[key] = tuple([c + (1-c) * 0.4 for c in rgb])
+
+    # Generate keys and labels
+    # Redundant Contributions
+    I_R_keys = []
+    I_R_labels = []
+    for r in range(nvars, 0, -1):
+        for comb in icmb(range(1, nvars + 1), r):
+            prefix = 'U' if len(comb) == 1 else 'R'
+            I_R_keys.append(prefix + ''.join(map(str, comb)))
+            I_R_labels.append(f"$\\mathrm{{{prefix}}}{{{''.join(map(str, comb))}}}$")
+    
+    # Synergestic Contributions
+    I_S_keys = ['S' + ''.join(map(str, comb)) for r in range(2, nvars+1) for comb in icmb(range(1, nvars + 1), r)]
+    I_S_labels = [f"$\\mathrm{{S}}{{{''.join(map(str, comb))}}}$" for r in range(2, nvars+1) for comb in icmb(range(1, nvars + 1), r)]
+
+    label_keys, labels = I_R_keys + I_S_keys, I_R_labels + I_S_labels
+
+    # Extracting and normalizing the values of information measures
+    values = [I_R.get(tuple(map(int, key[1:])), 0) if 'U' in key or 'R' in key 
+          else I_S.get(tuple(map(int, key[1:])), 0) 
+          for key in label_keys]
+    values /= sum(values)
+    max_value = max(values)
+
+    # Filtering based on threshold
+    top_n_indices = np.argsort(values)[-nlabels:]
+
+    # Filter both the values and labels arrays
+    filtered_values = values[top_n_indices]
+    filtered_labels = np.array(labels)[top_n_indices]
+    original_order_indices = np.argsort(top_n_indices)
+    filtered_values_in_original_order = filtered_values[original_order_indices]
+    filtered_labels_in_original_order = filtered_labels[original_order_indices]
+
+    # Convert filtered arrays back to lists if necessary
+    values = filtered_values_in_original_order
+    labels = filtered_labels_in_original_order.tolist()
+    
+    # Plotting the bar graph of information measures
+    for label, value in zip(labels, values):
+        if 'U' in label:
+            color = colors['unique']
+        elif 'S' in label:
+            color = colors['synergistic']
+        else:
+            color = colors['redundant']
+        axs[0].bar(label, value, color=color, edgecolor='black',linewidth=1.5)
+
+    axs[0].set_box_aspect(1/4)
+
+    # Plotting the information leak bar
+    axs[1].bar(' ', info_leak, color='gray', edgecolor='black')
+    axs[1].set_ylim([0, 1])
+    axs[0].set_yticks([0., 1.])
+    axs[0].set_ylim([0., 1.])
+
+    # change all spines
+    for axis in ['top','bottom','left','right']:
+        axs[0].spines[axis].set_linewidth(2)
+        axs[1].spines[axis].set_linewidth(2)
+
+    # increase tick width
+    axs[0].tick_params(width=3)
+    axs[1].tick_params(width=3)
+
+    return dict(zip(label_keys, values))
+

@@ -59,7 +59,7 @@ if __name__ == "__main__":
     fig, axs = plt.subplots(nvars, 2, figsize=(10, 2.3*nvars), gridspec_kw={'width_ratios': [nvars*14, 1]})
     plt.rcParams.update({'font.size': 18})
     for i in range(nvars):
-        information_flux[i+1] = surd.plot(Rd_results[i+1], Sy_results[i+1], info_leak_results[i+1], axs[i,:], nvars, threshold=-0.01)
+        information_flux[i+1] = surd.plot_nlabels(Rd_results[i+1], Sy_results[i+1], info_leak_results[i+1], axs[i,:], nvars, nlabels=12)
 
         # Plot formatting
         axs[i,0].set_title(f'${{\\Delta I}}_{{(\\cdot) \\rightarrow {i+1}}} / I \\left(\\Sigma_{i+1}^+ ; \\mathrm{{\\mathbf{{\\Sigma}}}} \\right)$',pad=10)
@@ -68,9 +68,6 @@ if __name__ == "__main__":
         axs[i,0].set_xticklabels(axs[i,0].get_xticklabels(), fontsize=16, rotation = 60, ha = 'right', rotation_mode='anchor')
 
     # Show the results
-    for i in range(0,nvars-1):
-        axs[i,0].set_xticklabels('')
-
     plt.tight_layout(w_pad=-15, h_pad=-0.1)
     plot_save_path = './results/surd_results/energy_cascade.png'
     plt.savefig(plot_save_path)
